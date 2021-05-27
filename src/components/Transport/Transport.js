@@ -1,17 +1,23 @@
 import React from 'react';
+import { useHistory } from 'react-router';
 
 const Transport = (props) => {
-    // console.log(props);
+
     const {title, imgURL, transportType, ticketPrice} = props.transport;
-    console.log(ticketPrice);
+    
+    const history = useHistory();
+    const handleBuyTicket = (type) => {
+        history.push(`/ticket-buy/${type}`)
+    }
+
     return (
         <div className="card mx-2 p-2 bg-dark" style={{width: '18rem'}}>
             <img src={imgURL} className="card-img-top border m-1 p-2" alt="" />
             <div className="card-body">
                 <h5 className="card-title">{title}</h5>
                 <p>Per Ticket: {ticketPrice}</p>
-                <input className='' type="date" name="travel-date" id="" /> <br /> <br />
-                <button className="btn btn-info">Buy Ticket</button>
+                <input style={{width:'125px'}} type="date" name="travel-date" id="" /> <br /> <br />
+                <button onClick={() => handleBuyTicket(transportType)} className="btn btn-info">Buy Ticket</button>
             </div>
         </div>
     );

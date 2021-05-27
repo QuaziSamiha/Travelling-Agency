@@ -9,6 +9,7 @@ import Home from './components/Home/Home';
 import Login from './components/Login/Login';
 import Blog from './components/Blog/Blog';
 import DestinationMap from './components/DestinationMap/DestinationMap';
+import TransportType from './components/TransportType/TransportType';
 
 function App() {
   return (
@@ -19,8 +20,11 @@ function App() {
           <Route path='/home'>
             <Home />
           </Route>
-          <Route path='/blog'>
+          {/* <Route path='/blog'>
             <Blog />
+          </Route> */}
+          <Route path='/ticket-buy/:transportType'>
+            <TransportType />
           </Route>
           <Route path='/destination'>
             <DestinationMap />
