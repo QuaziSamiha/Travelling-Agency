@@ -41,43 +41,64 @@ const Login = () => {
     const [user, setUser] = useState({
         isSignedIn: false,
         email: '',
-        password: ''
+        password: '',
+        error: '',
+        success: false
     });
 
-    const handleSubmit = () => {
-        console.log('sign in clicked')
-    }
-
     const handleBlur = (event) => {
-        let isFormValid;
+        let isFieldValid = true;
         if (event.target.name === 'email') {
-            isFormValid = /\S+@\S+\.\S+/.test(event.target.value);
+            isFieldValid = /\S+@\S+\.\S+/.test(event.target.value);
         }
         if (event.target.name === 'password') {
-            isFormValid = event.target.value.length > 6;
+            isFieldValid = event.target.value.length > 6;
         }
-        if (isFormValid) {
-            const updateUserInfo = { ...user };
-            updateUserInfo[event.target.name] = event.target.value;
-            setUser(updateUserInfo);
+        if (isFieldValid) {
+            const userInfo = { ...user };
+            userInfo[event.target.name] = event.target.value;
+            setUser(userInfo);
         }
+    }
+
+    const handleSubmit = (event) => {
+        if (user.email && user.password) {
+            firebase.auth()
+                .createUserWithEmailAndPassword(user.email, user.password)
+                .then(res => {
+                    const newUserInfo = { ...user };
+                    newUserInfo.error = '';
+                    newUserInfo.success = true;
+                    setUser(newUserInfo);
+                })
+                .catch((error) => {
+                    const newUserInfo = { ...user };
+                    newUserInfo.success = false;
+                    newUserInfo.error = error.message + '!!!';
+                    setUser(newUserInfo);
+                });
+        }
+        event.preventDefault();
     }
 
     return (
         <div style={{ paddingTop: '250px', margin: '0 20%' }}>
 
-            <h4 className='m-3 text-primary'>Create an Account</h4>
-            <form>
-                <fieldset className='border p-3 m-4'>
+            <h4 className='m-3 text-info'>Create an Account</h4>
+            <form className='border p-3 m-4'>
+                <fieldset>
                     <legend className=''>Enter Your Details:</legend>
                     <input className='form-control' type="text" name="email" onBlur={handleBlur} placeholder='enter your email...' required /> <br />
                     <input className='form-control' type="password" name="password" onBlur={handleBlur} placeholder='enter your password...' required />  <br />
-                    <input className='form-control bg-info' type="submit" value="Submit" /> <br />
+                    <input onClick={handleSubmit} className='form-control bg-info' type="submit" value="Submit" /> <br />
                 </fieldset>
+                {
+                    user.success ? <p className='text-success'>Account Created Successfully</p> : <p className='text-danger'>{user.error}</p>
+                }
             </form>
 
             <button onClick={handleGoogleSignIn} className='m-4 px-5 btn btn-info'>
-                <img src={GoogleLogo} alt="" className='google-logo'/>
+                <img src={GoogleLogo} alt="" className='google-logo' />
             Continue with Google
             </button>
         </div>
