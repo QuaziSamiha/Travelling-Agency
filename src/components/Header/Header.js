@@ -1,9 +1,13 @@
-import React from 'react';
+import React, { useContext } from 'react';
 import { Link } from 'react-router-dom';
 import './Header.css';
 import Logo from '../../images/Urban Riders.png';
+import { UserContext } from '../../App';
 
 const Header = () => {
+
+    const [loggedInUser, setLoggedInUser] = useContext(UserContext);
+
     return (
         <div className='fixed-top'>
             <nav className='navbar navbar-expand-md navbar-light bg-info'>
@@ -17,7 +21,7 @@ const Header = () => {
                             <Link className='nav-link m-2 text-light' to="/home">Home</Link>
                             {/* <Link className='nav-link m-2' to="/blog">Blog</Link> */}
                             <Link className='nav-link m-2 text-light' to="/destination">Destination</Link>
-                            <Link to='/login'><button className='btn btn-danger px-4 m-2'>Login</button></Link>
+                            <Link to='/login'><button className='btn btn-danger px-4 m-2'>{ loggedInUser.name ||'Login'}</button></Link>
                         </div>
                     </div>
                 </div>
