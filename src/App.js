@@ -19,7 +19,7 @@ export const UserContext = createContext();
 function App() {
 
   const [loggedInUser, setLoggedInUser] = useState({});
-  <h1>{loggedInUser.name}</h1>
+
   return (
     <UserContext.Provider value={[loggedInUser, setLoggedInUser]}>
       <div className="App">
@@ -29,15 +29,12 @@ function App() {
             <Route path='/home'>
               <Home />
             </Route>
-            {/* <Route path='/blog'>
-            <Blog />
-          </Route> */}
             <PrivateRoute path='/ticket-buy/:transportType'>
               <TransportType />
             </PrivateRoute>
-            <Route path='/destination'>
+            <PrivateRoute path='/destination'>
               <DestinationMap />
-            </Route>
+            </PrivateRoute>
             <Route path='/login'>
               <Login />
             </Route>

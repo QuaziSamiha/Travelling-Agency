@@ -16,7 +16,7 @@ const Transport = (props) => {
             <div className="card-body">
                 <h5 className="card-title">{title}</h5>
                 <p>Per Ticket: {ticketPrice}</p>
-                <input style={{width:'125px'}} type="date" name="travel-date" id="" /> <br /> <br />
+                <input style={{width:'145px'}} type="date" name="travel-date" id="" /> <br /> <br />
                 <button onClick={() => handleBuyTicket(transportType)} className="btn btn-info">Buy Ticket</button>
             </div>
         </div>

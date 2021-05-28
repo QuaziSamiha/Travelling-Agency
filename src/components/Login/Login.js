@@ -11,16 +11,19 @@ if (firebase.apps.length === 0) {
     firebase.initializeApp(firebaseConfig);
 }
 
-const Login = () => {
 
-    const googleProvider = new firebase.auth.GoogleAuthProvider();
+const Login = () => {
 
     const [loggedInUser, setLoggedInUser] = useContext(UserContext);
 
+    const googleProvider = new firebase.auth.GoogleAuthProvider();
+
+    // codes for private route
     const history = useHistory();
     const location = useLocation();
     const { from } = location.state || { from: { pathname: '/' } }
 
+    // sign in using google
     const handleGoogleSignIn = () => {
         firebase.auth()
             .signInWithPopup(googleProvider)
@@ -38,6 +41,7 @@ const Login = () => {
             })
     }
 
+    // sign in using email and password
     const [user, setUser] = useState({
         isSignedIn: false,
         email: '',
@@ -46,12 +50,17 @@ const Login = () => {
         success: false
     });
 
+    const [newUser, setNewUser] = useState(false);
+
     const handleBlur = (event) => {
         let isFieldValid = true;
         if (event.target.name === 'email') {
             isFieldValid = /\S+@\S+\.\S+/.test(event.target.value);
         }
         if (event.target.name === 'password') {
+            isFieldValid = event.target.value.length > 6;
+        }
+        if (event.target.name === 'confirm-password') {
             isFieldValid = event.target.value.length > 6;
         }
         if (isFieldValid) {
@@ -62,7 +71,7 @@ const Login = () => {
     }
 
     const handleSubmit = (event) => {
-        if (user.email && user.password) {
+        if (newUser && user.email && user.password) {
             firebase.auth()
                 .createUserWithEmailAndPassword(user.email, user.password)
                 .then(res => {
@@ -70,6 +79,8 @@ const Login = () => {
                     newUserInfo.error = '';
                     newUserInfo.success = true;
                     setUser(newUserInfo);
+                    setLoggedInUser(newUserInfo);
+                    history.replace(from);
                 })
                 .catch((error) => {
                     const newUserInfo = { ...user };
@@ -78,24 +89,61 @@ const Login = () => {
                     setUser(newUserInfo);
                 });
         }
+
+        if (!newUser && user.email && user.password) {
+            firebase.auth()
+                .signInWithEmailAndPassword(user.email, user.password)
+                .then(res => {
+                    const userInfo = { ...user };
+                    userInfo.error = '';
+                    userInfo.success = true;
+                    setUser(userInfo);
+                    setLoggedInUser(userInfo);
+                    history.replace(from);
+                })
+                .catch(error => {
+                    const userInfo = { ...user };
+                    userInfo.error = error.message;
+                    userInfo.success = false;
+                    setUser(userInfo)
+                })
+        }
+
         event.preventDefault();
     }
 
     return (
         <div style={{ paddingTop: '250px', margin: '0 20%' }}>
 
-            <h4 className='m-3 text-info'>Create an Account</h4>
-            <form className='border p-3 m-4'>
-                <fieldset>
-                    <legend className=''>Enter Your Details:</legend>
-                    <input className='form-control' type="text" name="email" onBlur={handleBlur} placeholder='enter your email...' required /> <br />
-                    <input className='form-control' type="password" name="password" onBlur={handleBlur} placeholder='enter your password...' required />  <br />
-                    <input onClick={handleSubmit} className='form-control bg-info' type="submit" value="Submit" /> <br />
-                </fieldset>
-                {
-                    user.success ? <p className='text-success'>Account Created Successfully</p> : <p className='text-danger'>{user.error}</p>
-                }
-            </form>
+            <div className='mx-4 p-2 bg-info text-dark border rounded-3'>
+                <input type="checkbox" name="newUser" onChange={() => setNewUser(!newUser)} />
+                <label htmlFor="newUser">New User ?</label>
+            </div>
+
+            { newUser ?
+                <form className='border rounded-3 p-3 m-4'>
+                    <fieldset>
+                        <legend className='text-info'>Enter Your Details for Create An Account:</legend>
+                        <input className='form-control' type="text" name="name" onBlur={handleBlur} placeholder='enter your name...' required /> <br />
+                        <input className='form-control' type="text" name="email" onBlur={handleBlur} placeholder='enter your email...' required /> <br />
+                        <input className='form-control' type="password" name="password" onBlur={handleBlur} placeholder='enter your password...' required />  <br />
+                        <input className='form-control' type="password" name="confirm-password" onBlur={handleBlur} placeholder='confirm your password...' required /> <br />
+                        <input onClick={handleSubmit} className='form-control bg-info' type="submit" value="Sign up" /> <br />
+                    </fieldset>
+                    {
+                        user.success ? <p className='text-success'>Account Created Successfully</p> : <p className='text-danger'>{user.error}</p>
+                    }
+                </form>
+                :
+                <form className='border rounded-3 p-3 m-4'>
+                    <fieldset>
+                        <legend className='text-info'>Enter Your Login Details:</legend>
+                        <input className='form-control' type="text" name="email" onBlur={handleBlur} placeholder='enter your email...' required /> <br />
+                        <input className='form-control' type="password" name="password" onBlur={handleBlur} placeholder='enter your password...' required />  <br />
+                        <input onClick={handleSubmit} className='form-control bg-info' type="submit" value="Sign in" /> <br />
+                    </fieldset>
+                </form>
+            }
 
             <button onClick={handleGoogleSignIn} className='m-4 px-5 btn btn-info'>
                 <img src={GoogleLogo} alt="" className='google-logo' />
