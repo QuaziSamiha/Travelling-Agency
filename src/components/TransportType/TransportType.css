@@ -1,22 +1,41 @@
-.destination-map{
+.destination-map {
     padding-top: 250px;
     margin: 0 10%;
     display: flex;
 }
 
-.transport-destination{
-    width: 45%;
+.transport-destination {
+    width: 50%;
     margin: 10px;
     padding: 10px;
 }
 
-.map-div{
-    width: 55%;
+.map-div {
+    width: 50%;
 }
 
-.map-div img{
+.map-div img {
     width: 500px;
     height: 600px;
     margin: 30px;
     padding: 10px;
+}
+
+.icons {
+    display: flex;
+}
+
+.icons p{
+    margin-left: 5px;
+}
+
+.icons .transport-img {
+    height: 50px;
+    width: 50px;
+}
+
+.icons .people-img {
+    margin-left: 30px;
+    height: 25px;
+    width: 25px;
 }
