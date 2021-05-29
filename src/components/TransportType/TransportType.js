@@ -41,9 +41,9 @@ const TransportType = () => {
 
 
     return (
-        <div className='destination-map' style={{ paddingTop: '250px', margin: '0 20%' }}>
-            <h1 className='text-info'>Welcome to travel by {transportType}</h1>
+        <div className='destination-map'>
             <div className='transport-destination'>
+            <h1 className='text-info'>Welcome to travel by {transportType}</h1>
                 {
                     passenger.success === false ?
                         <form onSubmit={handleSearch} className='border rounded-3 p-3 m-'>
