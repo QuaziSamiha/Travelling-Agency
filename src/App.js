@@ -7,7 +7,6 @@ import {
 import Header from './components/Header/Header';
 import Home from './components/Home/Home';
 import Login from './components/Login/Login';
-import Blog from './components/Blog/Blog';
 import DestinationMap from './components/DestinationMap/DestinationMap';
 import TransportType from './components/TransportType/TransportType';
 import { createContext, useState } from 'react';
