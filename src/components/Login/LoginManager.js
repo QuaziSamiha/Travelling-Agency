@@ -60,4 +60,5 @@ export const signInWithEmailAndPassword = (email, password) => {
             return userInfo;
         })
 }
+
 // export default LoginManager;
